@@ -1,4 +1,4 @@
-package com.github.joshuataylor.intellijelixirhelper
+package org.elixir_lang.intellij_elixir_helper
 
 import com.intellij.ide.highlighter.XmlFileType
 import com.intellij.openapi.components.service
@@ -6,7 +6,7 @@ import com.intellij.psi.xml.XmlFile
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.PsiErrorElementUtil
-import com.github.joshuataylor.intellijelixirhelper.services.MyProjectService
+import org.elixir_lang.intellij_elixir_helper.services.MyProjectService
 
 @TestDataPath("\$CONTENT_ROOT/src/test/testData")
 class MyPluginTest : BasePlatformTestCase() {

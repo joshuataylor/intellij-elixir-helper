@@ -1,4 +1,4 @@
-package com.github.joshuataylor.intellijelixirhelper.toolWindow
+package org.elixir_lang.intellij_elixir_helper.toolWindow
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
@@ -8,8 +8,8 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
-import com.github.joshuataylor.intellijelixirhelper.MyBundle
-import com.github.joshuataylor.intellijelixirhelper.services.MyProjectService
+import org.elixir_lang.intellij_elixir_helper.MyBundle
+import org.elixir_lang.intellij_elixir_helper.services.MyProjectService
 import javax.swing.JButton
 
 

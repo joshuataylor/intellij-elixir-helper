@@ -1,5 +1,7 @@
+import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -54,6 +56,7 @@ dependencies {
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
 intellijPlatform {
     pluginConfiguration {
+        id = providers.gradleProperty("pluginGroup")
         name = providers.gradleProperty("pluginName")
         version = providers.gradleProperty("pluginVersion")
 
@@ -86,6 +89,12 @@ intellijPlatform {
         ideaVersion {
             sinceBuild = providers.gradleProperty("pluginSinceBuild")
         }
+
+        vendor {
+            name = providers.gradleProperty("vendorName")
+            email = providers.gradleProperty("vendorEmail")
+            url = providers.gradleProperty("pluginRepositoryUrl")
+        }
     }
 
     signing {
@@ -104,7 +113,28 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            recommended()
+            select {
+                types = listOf(IntelliJPlatformType.IntellijIdeaCommunity)
+                untilBuild = "252.*"
+            }
+            select {
+                types = listOf(IntelliJPlatformType.IntellijIdeaUltimate)
+                sinceBuild = "253"
+            }
+        }
+    }
+}
+
+tasks.withType<RunIdeTask>().configureEach {
+    val compatiblePluginsList = providers.gradleProperty("runIdeCompatiblePlugins")
+        .get()
+        .let { if (it.isEmpty()) emptyList() else it.split(",") }
+
+    if (compatiblePluginsList.isNotEmpty()) {
+        dependencies {
+            intellijPlatform {
+                compatiblePlugins(compatiblePluginsList)
+            }
         }
     }
 }
@@ -152,6 +182,34 @@ intellijPlatformTesting {
 
             plugins {
                 robotServerPlugin()
+            }
+        }
+    }
+
+    // Get the list of platforms from gradle.properties
+    val platformsList = providers.gradleProperty("runIdePlatforms").get().split(",")
+
+    // Use providers.gradleProperty to get the 'runIdePlugins' property
+    val runIdePluginsProperty = providers.gradleProperty("runIdePlugins").getOrElse("")
+    val runIdePluginsList = runIdePluginsProperty.split(",")
+
+    platformsList.forEach { platform ->
+        runIde.create("run$platform") {
+            type = IntelliJPlatformType.valueOf(platform)
+            version = providers.gradleProperty("platformVersion$platform").get()
+            prepareSandboxTask {
+                sandboxDirectory = project.layout.buildDirectory.dir("${platform.lowercase()}-sandbox")
+            }
+
+            // if runIdePluginsList is not empty, set the plugins
+            if (runIdePluginsList.isNotEmpty()) {
+                // Apply each plugin from the 'runIdePluginsList'
+                // @todo can we move this to the runIde task?
+                plugins {
+                    runIdePluginsList.forEach { plugin ->
+                        plugins(plugin.trim())
+                    }
+                }
             }
         }
     }

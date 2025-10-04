@@ -1,4 +1,4 @@
-package com.github.joshuataylor.intellijelixirhelper
+package org.elixir_lang.intellij_elixir_helper
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls

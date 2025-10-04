@@ -1,9 +1,9 @@
-package com.github.joshuataylor.intellijelixirhelper.services
+package org.elixir_lang.intellij_elixir_helper.services
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
-import com.github.joshuataylor.intellijelixirhelper.MyBundle
+import org.elixir_lang.intellij_elixir_helper.MyBundle
 
 @Service(Service.Level.PROJECT)
 class MyProjectService(project: Project) {
